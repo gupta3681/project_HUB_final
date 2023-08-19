@@ -9,7 +9,9 @@ import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
-
+import { handleGoogleSignIn } from '../FB_SDK';
+// Use React Router useNavigate to jump to dashboard after successful login
+import { useNavigate } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled('div')(({ theme }) => ({
@@ -42,6 +44,17 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
+  const navigate = useNavigate();
+
+  const handleGoogleButtonClick = async () => {
+    try {
+      const user = await handleGoogleSignIn();
+      // Handle successful sign-in here
+      navigate('/dashboard'); // Navigate to the dashboard page
+    } catch (error) {
+      // Handle errors here
+    }
+  };
 
   return (
     <>
@@ -75,11 +88,18 @@ export default function LoginPage() {
 
             <Typography variant="body2" sx={{ mb: 5 }}>
               Don’t have an account? {''}
-              <Link variant="subtitle2">Get started</Link>
+              <Link variant="subtitle2" to="/CreateAccountPage">
+                Get started
+              </Link>
             </Typography>
 
             <Stack direction="row" spacing={2}>
-              <Button fullWidth size="large" color="inherit" variant="outlined">
+              <Button
+                fullWidth
+                size="large"
+                color="inherit"
+                variant="outlined"
+                onClick={handleGoogleButtonClick}>
                 <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
               </Button>
 
